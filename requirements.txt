@@ -1,0 +1,42 @@
+# FastAPI and ASGI server
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+python-multipart>=0.0.9
+
+# Database - PostgreSQL with psycopg
+sqlalchemy>=2.0.25
+alembic>=1.13.1
+psycopg[binary]>=3.1.0
+greenlet==3.3.1
+
+# Configuration
+pydantic>=2.5.3
+pydantic-settings>=2.1.0
+python-dotenv>=1.0.0
+email-validator>=2.1.0
+phonenumbers>=9.0.24
+pydantic-extra-types>=2.11.0
+
+# Authentication & Security
+pyjwt>=2.8.0
+argon2-cffi>=23.1.0
+starlette>=0.52.1
+pyotp>=2.9.0
+cryptography==48.0.0
+
+# Utilities
+python-slugify>=8.0.1
+aiosmtplib~=5.1.0
+httpx>=0.26.0
+APScheduler>=3.11.2
+boto3==1.43.0
+botocore==1.43.0
+
+# Testing
+pytest>=7.4.4
+pytest-asyncio>=0.23.3
+
+
+
+
+psutil
