@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     database_engine: str = 'postgresql+psycopg'
     database_ip: str = 'localhost'
     database_port: str = '5432'
-    database_name: str = 'auth_database'
+    database_name: str = 'wiki'
     database_username: str = 'faroosha'
     database_password: str = '1419'
 
@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     encryption_key : str = ''
     secret_key: str = 'blablablasecretkeytest'
     algorithm : str = 'HS256'
-    access_token_expire_minutes : int = 15
+    access_token_expire_minutes : int = 60
     refresh_token_expire_days : int = 30
     ip_check_enabled : bool = True
     max_attempt_per_ip : int = 10
@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     email_code_timeout : int = 10
 
     session_email_code_limit : int = 10
-    session_expire_minute : int = 15
+    session_expire_minute : int = 60
 
     # Password policy ==========================
     password_min_length : int = 10

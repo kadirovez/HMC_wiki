@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.crud.base import CRUDBase
 from src.models.auth.user import User
-from src.schemas.auth.user import UserCreate, UserUpdate
+from src.schemas.auth.user import UserCreate, UserUpdate, UserRoleUpdate
 
 
 class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
@@ -43,6 +43,18 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         user = User(**data)
         await self._check_unique_fields(db=db, data=data)
         db.add(user)
+        await db.commit()
+        await db.refresh(user)
+        return user
+
+    async def change_user_role(
+            self,
+            db: AsyncSession,
+            user_id: int,
+            obj_in: UserRoleUpdate,
+    ):
+        user = await db.get(self.model, user_id)
+        user.role = obj_in.role
         await db.commit()
         await db.refresh(user)
         return user

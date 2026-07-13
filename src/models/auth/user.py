@@ -1,11 +1,17 @@
 
+import enum
 from datetime import datetime
 
-from sqlalchemy import String, Boolean, DateTime, Integer
+from sqlalchemy import String, Boolean, DateTime, Integer, Enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.core.settings import settings
 from src.models.base import BaseDataModel
+
+
+class UserRole(str, enum.Enum):
+    ADMIN = "admin"
+    VIEWER = "viewer"
 
 
 class User(BaseDataModel):
@@ -17,6 +23,12 @@ class User(BaseDataModel):
         unique=True,
         nullable=False,
         index=True,
+    )
+
+    role: Mapped[UserRole] = mapped_column(
+        Enum(UserRole),
+        default=UserRole.VIEWER,
+        nullable=False,
     )
 
     first_name: Mapped[str] = mapped_column(

@@ -1,5 +1,5 @@
 
-from typing import Generic, TypeVar, Type, Optional
+from typing import Generic, TypeVar, Type, Optional, Sequence
 
 from fastapi import HTTPException
 from sqlalchemy import select, inspect
@@ -85,6 +85,26 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
                 detail='Model not found'
             )
         return db_obj
+
+    async def get_all(
+            self,
+            db: AsyncSession,
+            skip: int = 0,
+            limit: int = 100,
+    ) -> Sequence[ModelType]:
+        """
+        Gets multiple records from database.
+        Used primarily for users table
+        """
+        query = (
+            select(self.model)
+            .offset(skip)
+            .limit(limit)
+        )
+        query = self._apply_load_options(query)
+
+        result = await db.execute(query)
+        return result.scalars().all()
 
     async def create(
             self,
