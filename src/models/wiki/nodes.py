@@ -26,7 +26,7 @@ class Node(Base):
     )
 
     parent_id: Mapped[UUID | None] = mapped_column(
-        ForeignKey="nodes.id",
+        ForeignKey("nodes.id"),
         nullable=True,
     )
 
@@ -38,14 +38,14 @@ class Node(Base):
 
     title: Mapped[str] = mapped_column(
         String(255),
-        default=default_title(),
+        default=default_title,
         nullable=False,
     )
 
     slug: Mapped[str] = mapped_column(
         String(255),
         index=True,
-        default=generate_slug(),
+        default=generate_slug,
         nullable=False,
     )
 
