@@ -3,12 +3,18 @@ from datetime import datetime
 from enum import Enum
 from uuid import UUID, uuid4
 
-from sqlalchemy import ForeignKey, String, Integer, DateTime, func
+from sqlalchemy import (
+    ForeignKey,
+    String,
+    Integer,
+    DateTime,
+    func,
+    Enum as SQLEnum,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.utils.default_title import default_title
 from src.core.database import Base
-from src.utils.generate_slug import generate_slug
 
 
 class NodeType(str, Enum):
@@ -31,7 +37,7 @@ class Node(Base):
     )
 
     type: Mapped[NodeType] = mapped_column(
-        Enum(NodeType),
+        SQLEnum(NodeType),
         index=True,
         nullable=False,
     )
@@ -45,7 +51,6 @@ class Node(Base):
     slug: Mapped[str] = mapped_column(
         String(255),
         index=True,
-        default=generate_slug,
         nullable=False,
     )
 
@@ -71,7 +76,7 @@ class Node(Base):
 
     parent = relationship(
         "Node",
-        remote_side="id",
+        remote_side="Node.id",
         back_populates="children",
     )
 
@@ -86,4 +91,3 @@ class Node(Base):
         uselist=False,
         cascade="all, delete-orphan",
     )
-

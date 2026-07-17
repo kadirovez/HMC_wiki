@@ -25,7 +25,7 @@ async def _get_max_order_index(
         parent_id: UUID | None,
 ) -> int:
     """ Gets max order index from all nodes of one selected parent """
-    statement = select(func.max(Node.order_index).where(Node.parent_id == parent_id))
+    statement = select(func.max(Node.order_index)).where(Node.parent_id == parent_id)
     max_order = await db.scalar(statement)
     return (max_order or -1) +1
 
@@ -75,7 +75,7 @@ async def create_node(
         order_index=order_index
     )
 
-    db.add(Node)
+    db.add(node)
     await db.flush()
 
     if data.type == NodeType.FILE:

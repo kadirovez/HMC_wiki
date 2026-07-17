@@ -17,7 +17,7 @@ async def create_node(
         data: NodeCreate,
         db: AsyncSession = Depends(get_db),
         _current_user: User = Depends(require_role(UserRole.ADMIN)),
-) -> Node :
+):
     """
     Creates folder, auto generates slug, current user is needed to check for permission
     """
@@ -32,7 +32,7 @@ async def edit_node_title(
         data: NodeTitleUpdate,
         db: AsyncSession = Depends(get_db),
         _current_user: User = Depends(require_role(UserRole.ADMIN)),
-) -> Node :
+):
     """
     Edit node title, and generates new slug
     """
