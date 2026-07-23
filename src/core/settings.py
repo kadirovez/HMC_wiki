@@ -36,6 +36,8 @@ class Settings(BaseSettings):
     session_email_code_limit : int = 10
     session_expire_minute : int = 60
 
+    stale_ttl : int = 15
+
     # Password policy ==========================
     password_min_length : int = 10
     password_require_uppercase : bool = True
@@ -76,3 +78,4 @@ class Settings(BaseSettings):
 
 # Singleton instance
 settings = Settings()
+

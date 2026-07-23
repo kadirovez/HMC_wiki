@@ -5,11 +5,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.deps.database import get_db
 from src.deps.permission import require_role
 from src.models import UserRole, User
-from src.models.wiki.nodes import Node
-from src.schemas.wiki.nodes_schemas import NodeCreate, NodeTitleUpdate
+from src.schemas.wiki.nodes_schemas import NodeCreate, NodeTitleUpdate, NodeDelete
 from src.services.wiki.redactor import redactor_service
 
-router = APIRouter(prefix="/redact", tags=["redact"])
+router = APIRouter(prefix="/files", tags=["redact"])
 
 
 @router.post("/node")
@@ -42,12 +41,17 @@ async def edit_node_title(
     )
 
 
-@router.patch("/file")
-async def edit_file(
+@router.delete("/node")
+async def delete_node(
+        data: NodeDelete,
         db: AsyncSession = Depends(get_db),
-        _current_user: User = Depends(require_role(UserRole.ADMIN)),
+        _current_user : User = Depends(require_role(UserRole.ADMIN)),
 ):
     """
-    Edit file, if file title was changed, generates new slug
+    Deletes node, and all descendants
     """
-    return await redactor_service.edit_file()
+    await redactor_service.delete_node(
+        node_id=data.node_id,
+        db=db
+    )
+

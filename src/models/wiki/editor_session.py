@@ -9,8 +9,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.models import SessionAuthDataBase
 
 
-class RedactSession(SessionAuthDataBase):
-    __tablename__ = "redact_session"
+class EditorSession(SessionAuthDataBase):
+    __tablename__ = "editor_session"
 
     node_id: Mapped[UUID] = mapped_column(
         ForeignKey("nodes.id", ondelete="CASCADE"),

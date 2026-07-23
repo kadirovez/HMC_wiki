@@ -32,7 +32,7 @@ class Node(Base):
     )
 
     parent_id: Mapped[UUID | None] = mapped_column(
-        ForeignKey("nodes.id"),
+        ForeignKey("nodes.id", ondelete="CASCADE"),
         nullable=True,
     )
 
@@ -82,7 +82,8 @@ class Node(Base):
 
     children = relationship(
         "Node",
-        back_populates="parent"
+        back_populates="parent",
+        passive_deletes=True,
     )
 
     file_content = relationship(
