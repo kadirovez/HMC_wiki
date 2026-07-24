@@ -1,3 +1,4 @@
+
 from uuid import UUID
 
 from fastapi import APIRouter, Depends
@@ -6,13 +7,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.deps.database import get_db
 from src.deps.permission import require_role
 from src.models import User, UserRole
+from src.schemas.wiki.editor import EditorStatus, SaveRequest
 from src.services.wiki.editor_session import editor_service
 
 router = APIRouter(prefix="/edit", tags=["edit"])
 
 
 
-@router.post("/")
+@router.get("/")
 async def start_session(
         node_id: UUID,
         db: AsyncSession = Depends(get_db),
@@ -26,31 +28,62 @@ async def start_session(
     )
 
 
-@router.get("/editor-status")
-async def get_status():
-    """ залочен ли файл и кем (без захвата) """
-    return await editor_service.get_status()
+@router.get("/editor-status", response_model=EditorStatus)
+async def get_status(
+        node_id : UUID,
+        db: AsyncSession = Depends(get_db),
+        _current_user: User = Depends(require_role(UserRole.ADMIN))
+) -> EditorStatus:
+    """ Checks if the node is locked, without intercepting it """
+    return await editor_service.get_status(
+        db=db,
+        node_id=node_id,
+    )
 
 
 @router.patch("/editor")
-async def small_save():
-    """ черновик в editing_cd src/services/sessions, без ревизий """
-    return await editor_service.small_save()
+async def small_save(
+        data: SaveRequest,
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(require_role(UserRole.ADMIN)),
+):
+    """ Autosaves draft in editor session """
+    return await editor_service.small_save(
+        db=db,
+        user_id=user.id,
+        data=data,
+    )
 
 
-@router.post("/editor")
-async def save():
-    """ commit в file_contents + revision + чистка orphan-картинок """
-    return await editor_service.save()
+@router.patch("/editor-save")
+async def save(
+        data: SaveRequest,
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(require_role(UserRole.ADMIN)),
+):
+    """ Saves the draft to the main file """
+    return await editor_service.save(
+        db=db,
+        data=data,
+        user_id=user.id,
+    )
 
 
-@router.post("/img")
-async def upload_image():
-    """ — загрузка картинки в S3, возврат key + presigned url """
-    return await editor_service.upload_image()
+# @router.post("/img")
+# async def upload_image():
+#     """ — загрузка картинки в S3, возврат key + presigned url """
+#     return await editor_service.upload_image()
 
 
 @router.delete("/editor")
-async def end_session():
+async def end_session(
+        node_id: UUID,
+        db: AsyncSession = Depends(get_db),
+        user: User = Depends(require_role(UserRole.ADMIN)),
+):
     """ снятие лока + чистка orphan-картинок из черновика """
-    return await editor_service.end_session()
+    return await editor_service.end_session(
+        db=db,
+        node_id=node_id,
+        user_id=user.id,
+    )

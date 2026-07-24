@@ -5,8 +5,11 @@ from pydantic import BaseModel
 
 
 class EditorStatus(BaseModel):
-
     is_locked: bool
-    locked_by: UUID | None = None
+    locked_by: int | None = None
     locked_until: datetime | None = None
-    
+
+
+class SaveRequest(BaseModel):
+    node_id: UUID
+    content: dict

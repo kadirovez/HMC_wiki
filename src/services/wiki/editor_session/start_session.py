@@ -1,26 +1,23 @@
 
-from datetime import timedelta, datetime, timezone
+from datetime import datetime, timezone
 from uuid import UUID
 
 from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.settings import settings
 from src.crud.wiki.editor_session import get_active_session
+from src.crud.wiki.helpers import is_expired
 from src.models.wiki.editor_session import EditorSession
+import logging
 
-
-def _is_expired(editor_session):
-    anchor = editor_session.last_autosaved_at or editor_session.created_at
-    ttl = timedelta(minutes=settings.stale_ttl)
-    return anchor + ttl < datetime.now(timezone.utc)
+logger = logging.getLogger(__name__)
 
 
 async def start_session(
         db: AsyncSession,
         node_id: UUID,
-        user_id: UUID,
+        user_id: int,
 ) -> EditorSession:
     """
     Creates new edit session in case if the old one was not closed properly
@@ -43,7 +40,7 @@ async def start_session(
             await db.rollback()
             raise HTTPException(
                 status_code=409,
-                detail="Node is currently being edited by another user",
+                detail="Node is currently being edited by another user 1",
             )
         await db.refresh(editor_session)
         return editor_session
@@ -56,9 +53,9 @@ async def start_session(
         return existing
 
     # Case 3: The session belongs to someone else, but has expired fue to TTL - we intercept its string
-    if _is_expired(existing):
-        existing.user_id = user_id,
-        existing.draft_content = {},
+    if is_expired(existing):
+        existing.user_id = user_id
+        existing.draft_content = {}
         existing.last_autosaved_at = datetime.now(timezone.utc)
         await db.commit()
         await db.refresh(existing)
@@ -68,4 +65,3 @@ async def start_session(
         status_code=409,
         detail="Node is currently being edited by another user",
     )
-

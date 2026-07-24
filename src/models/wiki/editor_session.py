@@ -2,14 +2,14 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import ForeignKey, Boolean, Index, Column
+from sqlalchemy import ForeignKey, Boolean, Index, DateTime
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.models import SessionAuthDataBase
+from src.models.base import BaseDataModel
 
 
-class EditorSession(SessionAuthDataBase):
+class EditorSession(BaseDataModel):
     __tablename__ = "editor_session"
 
     node_id: Mapped[UUID] = mapped_column(
@@ -18,7 +18,7 @@ class EditorSession(SessionAuthDataBase):
         index=True,
     )
 
-    user_id: Mapped[UUID] = mapped_column(
+    user_id: Mapped[int] = mapped_column(
         ForeignKey("user.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
@@ -36,13 +36,15 @@ class EditorSession(SessionAuthDataBase):
         server_default="False",
     )
 
-    is_completed = Column(
+    is_completed: Mapped[bool] = mapped_column(
         Boolean,
         nullable=False,
-        default=False
+        default=False,
+        server_default="False",
     )
 
     last_autosaved_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
         nullable=True,
     )
 
