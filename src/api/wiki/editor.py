@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.deps.database import get_db
 from src.deps.permission import require_role
 from src.models import User, UserRole
-from src.schemas.wiki.editor import EditorStatus, SaveRequest
+from src.schemas.wiki.editor import EditorStatus, SaveRequest, FilePresignedRequest
 from src.services.wiki.editor_session import editor_service
 
 router = APIRouter(prefix="/edit", tags=["edit"])
@@ -69,10 +69,17 @@ async def save(
     )
 
 
-# @router.post("/img")
-# async def upload_image():
-#     """ — загрузка картинки в S3, возврат key + presigned url """
-#     return await editor_service.upload_image()
+@router.post("/file")
+async def generate_upload_url(
+        data: FilePresignedRequest,
+        db: AsyncSession = Depends(get_db),
+        _current_user: User = Depends(require_role(UserRole.ADMIN))
+):
+    """ Returns url to upload file to storage """
+    return await editor_service.generate_upload_url(
+        db=db,
+        data=data,
+    )
 
 
 @router.delete("/editor")

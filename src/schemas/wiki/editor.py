@@ -13,3 +13,9 @@ class EditorStatus(BaseModel):
 class SaveRequest(BaseModel):
     node_id: UUID
     content: dict
+
+
+class FilePresignedRequest(BaseModel):
+    node_id: UUID
+    filename: str
+    content_type: str
