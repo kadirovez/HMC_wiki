@@ -47,7 +47,7 @@ async def get_file(
         _current_user = Depends(get_current_user),
 ):
     """
-    Get file content
+    Gets file content with replaced media keys to download links
     """
     return await wiki_services.get_file(
         slug=slug,

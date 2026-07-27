@@ -2,6 +2,6 @@
 from pydantic import BaseModel
 
 
-class RedactorUpdate(BaseModel):
+class EditorUpdate(BaseModel):
     pass
 

@@ -17,9 +17,15 @@ class NodeCreate(BaseModel):
             return None
         return value
 
+
 class NodeTitleUpdate(BaseModel):
     node_id: UUID
     title: str
+
+
+class NodeDelete(BaseModel):
+    node_id: UUID
+
 
 class ShortNodeResponse(BaseModel):
     id: UUID

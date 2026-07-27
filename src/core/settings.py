@@ -36,6 +36,8 @@ class Settings(BaseSettings):
     session_email_code_limit : int = 10
     session_expire_minute : int = 60
 
+    stale_ttl : int = 15
+
     # Password policy ==========================
     password_min_length : int = 10
     password_require_uppercase : bool = True
@@ -52,6 +54,15 @@ class Settings(BaseSettings):
     smtp_password: str = ''
     smtp_sender_email: str = ''
     smtp_sender_name: str = ''
+
+    # S3 data ==================================
+    s3_endpoint: str = 'https://e5224b35f8d0713375580829c82b43fd.r2.cloudflarestorage.com'
+    s3_access_key: str = 'ed7baee89e9708ba4827d3aa5b1a98ce'
+    s3_secret_key: str = 'e6e00d5db446760755deff63b8d4c2afdf4b2f4a4dbca076fe1d89c3ddb93448'
+    s3_bucket: str = 'wiki'
+    s3_region_name: str = 'auto'
+
+
 
     model_config = SettingsConfigDict(
         env_file='.env',
@@ -76,3 +87,4 @@ class Settings(BaseSettings):
 
 # Singleton instance
 settings = Settings()
+

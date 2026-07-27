@@ -1,11 +1,12 @@
 
 from src.crud.auth.base import CRUDSessionBase
-from src.models.wiki.redact_session import RedactSession
+from src.models.wiki.editor_session import EditorSession
 from src.schemas.auth.base import CreateSessionSchema
-from src.schemas.wiki.redactor import RedactorUpdate
+from src.schemas.wiki.redactor import EditorUpdate
 
 
-class CRUDRedact(CRUDSessionBase[RedactSession, CreateSessionSchema, RedactorUpdate]):
+class CRUDEdit(CRUDSessionBase[EditorSession, CreateSessionSchema, EditorUpdate]):
     pass
 
-redact_crud = CRUDRedact(RedactSession)
+
+editor_crud = CRUDEdit(EditorSession)

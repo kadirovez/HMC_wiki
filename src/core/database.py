@@ -26,10 +26,10 @@ AsyncSessionLocal = async_sessionmaker(
 class Base(DeclarativeBase):
     pass
 
-async def init_db() -> None :
-    ''' Initialize database tables '''
-    async with engine.begin() as connection:
-        await connection.run_sync(Base.metadata.create_all)
+# async def init_db() -> None :
+#     ''' Initialize database tables '''
+#     async with engine.begin() as connection:
+#         await connection.run_sync(Base.metadata.create_all)
 
 async def close_db() -> None :
     ''' Close database connections'''

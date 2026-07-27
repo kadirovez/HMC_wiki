@@ -4,15 +4,15 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from src.api.router import api_router
-from src.core.database import close_db, init_db
+from src.core.database import close_db
 from src.core.settings import settings
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    await init_db()
+    # await init_db()
     yield
-    await close_db()
+    # await close_db()
 
 
 app = FastAPI(
