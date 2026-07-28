@@ -43,3 +43,15 @@ async def generate_presigned_put_url(
             ExpiresIn=expires_in,
         )
 
+
+async def delete_objects(keys: list[str]) -> None:
+    """ Deleting objects from S3 (used to clean up orphaned media) """
+    if not keys:
+        return
+
+    async with get_s3_client() as s3:
+        await s3.delete_objects(
+            Bucket=settings.s3_bucket,
+            Delete={"Objects": [{"Key": key} for key in keys]},
+        )
+

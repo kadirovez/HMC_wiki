@@ -9,6 +9,8 @@ from src.crud.wiki.editor_session import get_active_session
 from src.crud.wiki.helpers import is_expired
 from src.models import FileContent
 from src.schemas.wiki.editor import SaveRequest
+from src.services.wiki.editor_session.helpers import diff_orphaned_keys
+from src.services.wiki.editor_session.s3_utils import delete_objects
 
 
 async def save(
@@ -47,6 +49,8 @@ async def save(
             detail="File content not found for this node",
         )
 
+    orphaned_keys = diff_orphaned_keys(file_content.content, data.content)
+
     # Save to main project
     file_content.content = data.content
 
@@ -55,5 +59,15 @@ async def save(
 
     await db.commit()
     await db.refresh(file_content)
+
+    if orphaned_keys:
+        try:
+            await delete_objects(list(orphaned_keys))
+        except Exception:
+            raise HTTPException(
+                status_code=401,
+                detail="Was not able to delete orphans"
+            )
+
     return file_content
 
