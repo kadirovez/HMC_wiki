@@ -10,7 +10,6 @@ from src.crud.auth.base import CRUDSessionBase
 from src.crud.auth.login import login_crud
 from src.crud.auth.main import main_crud
 from src.crud.auth.register import registration_crud
-from src.crud.wiki.redact import editor_crud
 from src.deps.database import get_db
 from src.utils.ip_address import get_ip
 from src.utils.jwt_token import decode_access_token
@@ -110,12 +109,3 @@ async def get_main_session(
 ):
     ''' Gets main session via jwt '''
     return await _get_session_from_token(request, credentials, db, main_crud)
-
-
-async def get_redact_session(
-        request: Request,
-        credentials : HTTPAuthorizationCredentials = Depends(bearer_scheme),
-        db: AsyncSession = Depends(get_db),
-):
-    """ Gets edit session for commiting changes in files """
-    return await _get_session_from_token(request, credentials, db, editor_crud)

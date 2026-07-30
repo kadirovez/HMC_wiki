@@ -50,6 +50,7 @@ def _build_tree(
         return {
             "id":node.id,
             "title":node.title,
+            "order_index":node.order_index,
             "slug":node.slug,
             "type":node.type,
             "children":[to_dict(child) for child in children_by_parent.get(node.id, [])]

@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.deps.database import get_db
 from src.deps.permission import require_role
 from src.models import User, UserRole
-from src.schemas.wiki.editor import EditorStatus, SaveRequest, FilePresignedRequest
+from src.schemas.wiki.editor import EditorStatus, SaveRequest, MediaPresignedRequest
 from src.services.wiki.editor_session import editor_service
 
 router = APIRouter(prefix="/edit", tags=["edit"])
@@ -69,9 +69,9 @@ async def save(
     )
 
 
-@router.post("/file")
+@router.post("/media")
 async def generate_upload_url(
-        data: FilePresignedRequest,
+        data: MediaPresignedRequest,
         db: AsyncSession = Depends(get_db),
         _current_user: User = Depends(require_role(UserRole.ADMIN))
 ):
