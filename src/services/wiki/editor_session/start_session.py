@@ -9,9 +9,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.crud.wiki.editor_session import get_active_session
 from src.crud.wiki.helpers import is_expired
 from src.models.wiki.editor_session import EditorSession
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 async def start_session(

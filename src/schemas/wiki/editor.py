@@ -15,7 +15,7 @@ class SaveRequest(BaseModel):
     content: dict
 
 
-class FilePresignedRequest(BaseModel):
+class MediaPresignedRequest(BaseModel):
     node_id: UUID
     filename: str
     content_type: str

@@ -4,7 +4,7 @@ from .start_session import start_session
 from .end_session import end_session
 from .save import save
 from .small_save import small_save
-from .upload_image import generate_upload_url
+from .generate_upload_url import generate_upload_url
 
 class EditorService():
     get_status = staticmethod(get_status)

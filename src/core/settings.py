@@ -57,8 +57,8 @@ class Settings(BaseSettings):
 
     # S3 data ==================================
     s3_endpoint: str = 'https://e5224b35f8d0713375580829c82b43fd.r2.cloudflarestorage.com'
-    s3_access_key: str = 'ed7baee89e9708ba4827d3aa5b1a98ce'
-    s3_secret_key: str = 'e6e00d5db446760755deff63b8d4c2afdf4b2f4a4dbca076fe1d89c3ddb93448'
+    s3_access_key: str = '60a7a87928be5d180d5d7f3322b9f787'
+    s3_secret_key: str = 'bacecc063f62bfa57ae84c93b5cb90d05fcf909e2144ccb1567d6793c4c4d02d'
     s3_bucket: str = 'wiki'
     s3_region_name: str = 'auto'
 

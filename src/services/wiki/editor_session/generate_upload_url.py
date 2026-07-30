@@ -4,8 +4,9 @@ import uuid
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.core.settings import settings
 from src.models import Node
-from src.schemas.wiki.editor import FilePresignedRequest
+from src.schemas.wiki.editor import MediaPresignedRequest
 from src.services.wiki.editor_session.s3_utils import generate_presigned_put_url
 
 
@@ -15,7 +16,7 @@ PRESIGN_TTL = 3600
 
 async def generate_upload_url(
         db: AsyncSession,
-        data: FilePresignedRequest,
+        data: MediaPresignedRequest,
 ) -> dict:
 
     # Check if node exists
@@ -45,5 +46,6 @@ async def generate_upload_url(
         content_type=data.content_type,
         expires_in=PRESIGN_TTL,
     )
+    print(settings.s3_secret_key)
 
     return {"key": key, "upload_url": upload_url, "type": "image" if is_image else "video"}

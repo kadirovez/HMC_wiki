@@ -1,13 +1,11 @@
 
-from uuid import UUID
-
 from fastapi import HTTPException
-from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models.wiki.file_content import FileContent
 from src.models.wiki.nodes import NodeType, Node
 from src.schemas.wiki.nodes_schemas import NodeCreate
+from src.services.wiki.redactor.helpers import get_max_order_index
 from src.utils.default_title import default_title
 from src.utils.generate_slug import generate_slug
 
@@ -18,16 +16,6 @@ ALLOWED_PARENT_TYPES : dict[NodeType, set[NodeType | None]] = {
     NodeType.FOLDER : {NodeType.SECTION, NodeType.FOLDER},
     NodeType.FILE : {NodeType.SECTION, NodeType.FOLDER},
 }
-
-
-async def _get_max_order_index(
-        db: AsyncSession,
-        parent_id: UUID | None,
-) -> int:
-    """ Gets max order index from all nodes of one selected parent """
-    statement = select(func.max(Node.order_index)).where(Node.parent_id == parent_id)
-    max_order = await db.scalar(statement)
-    return (max_order or -1) +1
 
 
 async def create_node(
@@ -65,7 +53,7 @@ async def create_node(
 
     title = data.title or default_title()
     slug = await generate_slug(db, title, data.parent_id)
-    order_index = await _get_max_order_index(db, data.parent_id)
+    order_index = await get_max_order_index(db, data.parent_id)
 
     node = Node(
         parent_id=data.parent_id,
