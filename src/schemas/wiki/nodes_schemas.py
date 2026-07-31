@@ -26,6 +26,7 @@ class NodeTitleUpdate(BaseModel):
     node_id: UUID
     title: str
 
+
 class NodeMove(BaseModel):
     node_id: UUID
     new_parent_id: UUID | None = None
