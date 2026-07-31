@@ -23,6 +23,7 @@ class NodeType(str, Enum):
     FOLDER = "folder"
     FILE = "file"
 
+
 class Node(Base):
     __tablename__ = "nodes"
 

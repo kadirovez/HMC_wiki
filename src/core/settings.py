@@ -87,4 +87,3 @@ class Settings(BaseSettings):
 
 # Singleton instance
 settings = Settings()
-
